@@ -1,6 +1,5 @@
 import { build } from 'esbuild';
-import pkg from "glob";
-const { glob } = pkg;
+import glob from "glob";
 
 const entryPoints = glob.sync('src/**/*.ts');
 
