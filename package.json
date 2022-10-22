@@ -1,5 +1,5 @@
 {
-  "name": "and-ts-sample",
+  "name": "esbuild-plugin-copy-sample",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
