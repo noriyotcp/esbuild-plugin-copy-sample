@@ -3,12 +3,20 @@ import glob from "glob";
 
 const entryPoints = glob.sync('src/**/*.ts');
 
-build({
+const options = {
   entryPoints,
-  outbase: './src',
-  outdir: './lib',
-  platform: 'node',
+  outbase: "./src",
+  outdir: "./lib",
+  platform: "node",
   sourcemap: true,
   bundle: true,
   watch: true,
-}).catch(() => process.exit(1))
+};
+
+(async () => {
+  try {
+    const res = await build(options)
+  } catch (error) {
+    process.exit(1);
+  }
+})();
