@@ -12,6 +12,16 @@ const options = {
   sourcemap: true,
   bundle: true,
   // watch: true,
+  plugins: [
+    copy({
+      resolveFrom: "cwd",
+      assets: {
+        from: ["./assets/**/*"],
+        to: ["./tmp-assets"],
+        keepStructure: true,
+      },
+    }),
+  ],
 };
 
 (async () => {
