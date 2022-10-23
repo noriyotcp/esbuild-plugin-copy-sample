@@ -1,8 +1,8 @@
 import fs from "node:fs";
 
 export const justCopy = (options) => {
-  const from = options.assets.from;
-  const to = options.assets.to;
+  const from = options.assets.from[0];
+  const to = options.assets.to[0];
 
   console.log(options);
 
@@ -20,12 +20,12 @@ export const justCopy = (options) => {
     name: 'just-copy',
     setup(build) {
       build.onLoad({ filter: /.*/ }, async (args) => {
-        if (!isFile(from[0])) {
+        if (!isFile(from)) {
           return {
-            errors: [{ text: `${from[0]} or ${to[0]} is not a file` }],
+            errors: [{ text: `${from} or ${to} is not a file` }],
           };
         } else {
-          await fs.promises.copyFile(from[0], to[0], 0, (err) => {
+          await fs.promises.copyFile(from, to, 0, (err) => {
             return { errors: [{ text: err.message }] };
           });
         }
