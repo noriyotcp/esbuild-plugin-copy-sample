@@ -185,15 +185,21 @@ export const justCopy = (options) => {
               errors,
             };
           } else {
-            composeToFiles(from, to).forEach(async (toPath) => {
+            const filePaths = mergeComposedObjects({
+              fromObject: composeFromObject(from),
+              toObject: composeToObject(from, to),
+              mode: "files",
+            });
+            filePaths.forEach(async (path) => {
               try {
-                const createDir = await mkdir(dirname(toPath), {
+                await mkdir(dirname(path.to), {
                   recursive: true,
                 });
               } catch (err) {
                 console.error(err.message);
               }
-              return await copySingleFile(from, toPath);
+
+              return await copySingleFile(path.from, path.to);
             });
           }
         }
