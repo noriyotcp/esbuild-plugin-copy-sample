@@ -106,10 +106,19 @@ export const justCopy = (options) => {
 
   // merge composed objects
   const mergeComposedObjects = ({ fromObject, toObject, mode="all" }) => {
-    const fromPaths = fromObject.map((fo) => join(fo.dir, fo.base));
-    const toPaths = toObject.map((to) => join(to.dir, to.base));
-    return fromObject.map((fo, i) => {
-      return { from: fromPaths[i], to: toPaths[i] }
+    let fromPaths, toPaths;
+
+    if (mode === "files") { // with extension
+      fromPaths = fromObject
+        .filter((fo) => fo.ext.startsWith("."))
+        .flatMap((fo) => join(fo.dir, fo.base));
+      toPaths = toObject
+        .filter((fo) => fo.ext.startsWith("."))
+        .flatMap((to) => join(to.dir, to.base));
+    }
+
+    return fromPaths.map((fo, i) => {
+      return { from: fromPaths[i], to: toPaths[i] };
     });
   }
 
@@ -144,6 +153,7 @@ export const justCopy = (options) => {
                 mergeComposedObjects({
                   fromObject: composeFromObject(from),
                   toObject: composeToObject(from, to),
+                  mode: "files",
                 })
               );
             } catch (err) {
