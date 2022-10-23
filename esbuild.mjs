@@ -14,15 +14,22 @@ const options = {
   bundle: true,
   // watch: true,
   plugins: [
-    copy({
+    // copy({
+    //   resolveFrom: "cwd",
+    //   assets: {
+    //     from: ["./assets/**/*"],
+    //     to: ["./tmp-assets"],
+    //     keepStructure: true,
+    //   },
+    // }),
+    justCopy({
       resolveFrom: "cwd",
       assets: {
-        from: ["./assets/**/*"],
-        to: ["./tmp-assets"],
+        from: ["./assets/test.ts"],
+        to: ["./just-copy-assets/test.ts"],
         keepStructure: true,
       },
     }),
-    justCopy(),
   ],
 };
 
