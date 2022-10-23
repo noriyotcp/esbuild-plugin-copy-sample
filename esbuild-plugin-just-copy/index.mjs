@@ -52,31 +52,6 @@ export const justCopy = (options) => {
     }).filter((path) => path !== undefined);
   };
 
-  const composeToFilesOnGlobbed = (rawFrom, rawTo) => {
-    const parsedReplacedPaths = composeToObject(rawFrom, rawTo);
-    return parsedReplacedPaths.map((parsedPath) => {
-      if (parsedPath.ext.startsWith(".")) {
-        return join(parsedPath.dir, parsedPath.base);
-      }
-    }).filter((path) => path !== undefined);
-  };
-
-  // rerurns array of `from` file paths, not directories
-  const composeFromFiles = (rawFrom) => {
-    let fromPaths;
-
-    fromPaths = glob.sync(from);
-    const mapping = replacedPathsMapping(fromPaths);
-
-    return mapping
-      .map((parsedPath) => {
-        if (parsedPath.ext.startsWith(".")) {
-          return join(parsedPath.dir, parsedPath.base);
-        }
-      })
-      .filter((path) => path !== undefined);
-  }
-
   const composeToObject = (rawFrom, rawTo) => {
     let replaced;
 
@@ -136,10 +111,6 @@ export const justCopy = (options) => {
   const replacedPathsMapping = (replaced) => {
     return replaced.map((_path) => parse(_path));
   };
-
-  const absoluteDirs = (absPaths) => {
-    return absPaths.map((p) => dirname(p));
-  }
 
   const copySingleFile = async (from, to) => {
     await fs.promises.copyFile(from, to, 0, (err) => {
