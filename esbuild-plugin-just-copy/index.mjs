@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import glob from "glob";
 import { mkdir } from "node:fs/promises";
-import path from "node:path";
+import { parse, join, dirname } from "node:path";
 
 export const justCopy = (options) => {
   const errors = [];
@@ -21,7 +21,7 @@ export const justCopy = (options) => {
   };
 
   const isGlob = (_path) => {
-    const { dir } = path.parse(_path);
+    const { dir } = parse(_path);
 
     return dir.endsWith("/**");
   }
@@ -34,7 +34,7 @@ export const justCopy = (options) => {
     const parsedReplacedPaths = composeReplacedTo(rawFrom, rawTo);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext === "") {
-        return path.join(parsedPath.dir, parsedPath.base);
+        return join(parsedPath.dir, parsedPath.base);
       }
     }).filter((dir) => dir !== undefined);
   };
@@ -48,7 +48,7 @@ export const justCopy = (options) => {
     console.log(parsedReplacedPaths);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext.startsWith(".")) {
-        return path.join(parsedPath.dir, parsedPath.base);
+        return join(parsedPath.dir, parsedPath.base);
       }
     }).filter((path) => path !== undefined);
   };
@@ -57,7 +57,7 @@ export const justCopy = (options) => {
     let replaced;
 
     if (isGlob(rawFrom)) {
-      const { dir } = path.parse(rawFrom);
+      const { dir } = parse(rawFrom);
 
       const startFragment = dir.replace(`/**`, "");
       const fromPaths = glob.sync(from);
@@ -71,11 +71,11 @@ export const justCopy = (options) => {
   }
 
   const replacedPathsMapping = (replaced) => {
-    return replaced.map((_path) => path.parse(_path));
+    return replaced.map((_path) => parse(_path));
   };
 
   const absoluteDirs = (absPaths) => {
-    return absPaths.map((p) => path.dirname(p));
+    return absPaths.map((p) => dirname(p));
   }
 
   const copySingleFile = async (from, to) => {
@@ -107,7 +107,7 @@ export const justCopy = (options) => {
           } else {
             composeToFiles(from, to).forEach(async (toPath) => {
               try {
-                const createDir = await mkdir(path.dirname(toPath), { recursive: true });
+                const createDir = await mkdir(dirname(toPath), { recursive: true });
                 console.log(`created ${createDir}`);
               } catch (err) {
                 console.error(err.message);
