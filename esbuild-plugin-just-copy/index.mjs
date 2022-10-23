@@ -182,6 +182,7 @@ export const justCopy = (options) => {
     setup(build) {
       build.onLoad({ filter: /.*/ }, async (args) => {
         if (isGlob(from)) {
+          // create dirs
           for (const path of composeToDirs(from, to)) {
             try {
               await mkdir(path, { recursive: true });
@@ -190,6 +191,14 @@ export const justCopy = (options) => {
               console.error(err.message);
             }
           }
+          const filePaths = mergeComposedObjects({
+            fromObject: composeFromObject(from),
+            toObject: composeToObject(from, to),
+            mode: "files",
+          });
+          filePaths.forEach(async (path) => {
+            await copySingleFile(path.from, path.to);
+          });
         } else {
           consoleForcomposingObjects(from, to);
 
