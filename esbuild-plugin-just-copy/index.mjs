@@ -145,9 +145,15 @@ export const justCopy = (options) => {
       build.onLoad({ filter: /.*/ }, async (args) => {
         if (isGlob(from)) {
           // create dirs
-          for (const path of composeToDirs(from, to)) {
+          const dirPaths = mergeComposedObjects({
+            fromObject: composeFromObject(from),
+            toObject: composeToObject(from, to),
+            mode: "dirs",
+          });
+
+          for (const path of dirPaths) {
             try {
-              await mkdir(path, { recursive: true });
+              await mkdir(path.to, { recursive: true });
               consoleForcomposingObjects(from, to);
             } catch (err) {
               console.error(err.message);
