@@ -41,21 +41,6 @@ export const justCopy = (options) => {
       .filter((dir) => dir !== undefined);
   };
 
-  const composeToFiles = (rawFrom, rawTo) => {
-    if (isGlob(rawFrom)) {
-      return; // TODO: throw error
-    }
-
-    const parsedReplacedPaths = composeToObject(rawFrom, rawTo);
-    return parsedReplacedPaths
-      .map((parsedPath) => {
-        if (parsedPath.ext.startsWith(".")) {
-          return join(parsedPath.dir, parsedPath.base);
-        }
-      })
-      .filter((path) => path !== undefined);
-  };
-
   const composeToObject = (rawFrom, rawTo) => {
     let replaced;
 
