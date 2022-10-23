@@ -26,21 +26,6 @@ export const justCopy = (options) => {
     return dir.endsWith("/**");
   };
 
-  const composeToDirs = (rawFrom, rawTo) => {
-    if (!isGlob(rawFrom)) {
-      return; // TODO: throw error
-    }
-
-    const parsedReplacedPaths = composeToObject(rawFrom, rawTo);
-    return parsedReplacedPaths
-      .map((parsedPath) => {
-        if (parsedPath.ext === "") {
-          return join(parsedPath.dir, parsedPath.base);
-        }
-      })
-      .filter((dir) => dir !== undefined);
-  };
-
   const composeToObject = (rawFrom, rawTo) => {
     let replaced;
 
