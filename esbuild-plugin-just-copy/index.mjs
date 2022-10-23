@@ -119,10 +119,7 @@ export const justCopy = (options) => {
           for (const path of composeToDirs(from, to)) {
             try {
               const createDir = await mkdir(path, { recursive: true });
-              console.log(`created ${createDir}`);
               // composeToFilesOnGlobbed(from, to);
-
-              console.log(composeFromFiles(from, to));
             } catch (err) {
               console.error(err.message);
             }
@@ -137,7 +134,6 @@ export const justCopy = (options) => {
             composeToFiles(from, to).forEach(async (toPath) => {
               try {
                 const createDir = await mkdir(dirname(toPath), { recursive: true });
-                console.log(`created ${createDir}`);
               } catch (err) {
                 console.error(err.message);
               }
