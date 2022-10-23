@@ -31,14 +31,7 @@ export const justCopy = (options) => {
       return; // TODO: throw error
     }
 
-    const { dir } = path.parse(rawFrom);
-
-    const startFragment = dir.replace(`/**`, "");
-    const fromPaths = glob.sync(from);
-    const replaced = fromPaths.map((fromPath) => {
-      return fromPath.replace(startFragment, rawTo);
-    });
-    const parsedReplacedPaths = replacedPathsMapping(replaced);
+    const parsedReplacedPaths = composeReplacedTo(rawFrom, rawTo);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext === "") {
         return path.join(parsedPath.dir, parsedPath.base);
@@ -51,19 +44,31 @@ export const justCopy = (options) => {
       return; // TODO: throw error
     }
 
-    const startFragment = path.parse(rawFrom).dir;
-    const fromPaths = glob.sync(from);
-    const replaced = fromPaths.map((fromPath) => {
-      return fromPath.replace(startFragment, rawTo);
-    });
-    const parsedReplacedPaths = replacedPathsMapping(replaced);
+    const parsedReplacedPaths = composeReplacedTo(rawFrom, rawTo);
     console.log(parsedReplacedPaths);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext.startsWith(".")) {
-        return parsedPath.dir;
+        return path.join(parsedPath.dir, parsedPath.base);
       }
     }).filter((path) => path !== undefined);
   };
+
+  const composeReplacedTo = (rawFrom, rawTo) => {
+    let replaced;
+
+    if (isGlob(rawFrom)) {
+      const { dir } = path.parse(rawFrom);
+
+      const startFragment = dir.replace(`/**`, "");
+      const fromPaths = glob.sync(from);
+      replaced = fromPaths.map((fromPath) => {
+        return fromPath.replace(startFragment, rawTo);
+      });
+    } else {
+      replaced = [rawTo];
+    }
+    return replacedPathsMapping(replaced);
+  }
 
   const replacedPathsMapping = (replaced) => {
     return replaced.map((_path) => path.parse(_path));
