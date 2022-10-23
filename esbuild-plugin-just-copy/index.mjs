@@ -53,6 +53,31 @@ export const justCopy = (options) => {
     }).filter((path) => path !== undefined);
   };
 
+  const composeToFilesOnGlobbed = (rawFrom, rawTo) => {
+    const parsedReplacedPaths = composeReplacedTo(rawFrom, rawTo);
+    return parsedReplacedPaths.map((parsedPath) => {
+      if (parsedPath.ext.startsWith(".")) {
+        return join(parsedPath.dir, parsedPath.base);
+      }
+    }).filter((path) => path !== undefined);
+  };
+
+  // rerurns array of `from` file paths, not directories
+  const composeFromFiles = (rawFrom) => {
+    let fromPaths;
+
+    fromPaths = glob.sync(from);
+    const mapping = replacedPathsMapping(fromPaths);
+
+    return mapping
+      .map((parsedPath) => {
+        if (parsedPath.ext.startsWith(".")) {
+          return join(parsedPath.dir, parsedPath.base);
+        }
+      })
+      .filter((path) => path !== undefined);
+  }
+
   const composeReplacedTo = (rawFrom, rawTo) => {
     let replaced;
 
@@ -70,6 +95,7 @@ export const justCopy = (options) => {
     return replacedPathsMapping(replaced);
   }
 
+  // Rename to composedPaths
   const replacedPathsMapping = (replaced) => {
     return replaced.map((_path) => parse(_path));
   };
@@ -94,6 +120,9 @@ export const justCopy = (options) => {
             try {
               const createDir = await mkdir(path, { recursive: true });
               console.log(`created ${createDir}`);
+              // composeToFilesOnGlobbed(from, to);
+
+              console.log(composeFromFiles(from, to));
             } catch (err) {
               console.error(err.message);
             }
