@@ -26,7 +26,7 @@ const options = {
 
 (async () => {
   try {
-    const res = await build(options)
+    await build(options)
   } catch (error) {
     process.exit(1);
   }
