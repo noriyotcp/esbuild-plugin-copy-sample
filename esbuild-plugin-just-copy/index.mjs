@@ -115,6 +115,13 @@ export const justCopy = (options) => {
       toPaths = toObject
         .filter((fo) => fo.ext.startsWith("."))
         .flatMap((to) => join(to.dir, to.base));
+    } else if (mode === "dirs") { // without extension
+      fromPaths = fromObject
+        .filter((fo) => fo.ext === "")
+        .flatMap((fo) => join(fo.dir, fo.base));
+      toPaths = toObject
+        .filter((fo) => fo.ext === "")
+        .flatMap((to) => join(to.dir, to.base));
     }
 
     return fromPaths.map((fo, i) => {
@@ -154,6 +161,14 @@ export const justCopy = (options) => {
                   fromObject: composeFromObject(from),
                   toObject: composeToObject(from, to),
                   mode: "files",
+                })
+              );
+              console.log(
+                "mergeComposedObjects",
+                mergeComposedObjects({
+                  fromObject: composeFromObject(from),
+                  toObject: composeToObject(from, to),
+                  mode: "dirs",
                 })
               );
             } catch (err) {
