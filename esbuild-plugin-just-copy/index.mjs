@@ -104,6 +104,15 @@ export const justCopy = (options) => {
     }
   }
 
+  // merge composed objects
+  const mergeComposedObjects = ({ fromObject, toObject, mode="all" }) => {
+    const fromPaths = fromObject.map((fo) => join(fo.dir, fo.base));
+    const toPaths = toObject.map((to) => join(to.dir, to.base));
+    return fromObject.map((fo, i) => {
+      return { from: fromPaths[i], to: toPaths[i] }
+    });
+  }
+
   // Rename to composedPaths
   const replacedPathsMapping = (replaced) => {
     return replaced.map((_path) => parse(_path));
@@ -130,6 +139,13 @@ export const justCopy = (options) => {
               await mkdir(path, { recursive: true });
               console.log("composeFromObject: ", composeFromObject(from));
               console.log("composeToObject", composeToObject(from, to));
+              console.log(
+                "mergeComposedObjects",
+                mergeComposedObjects({
+                  fromObject: composeFromObject(from),
+                  toObject: composeToObject(from, to),
+                })
+              );
             } catch (err) {
               console.error(err.message);
             }
