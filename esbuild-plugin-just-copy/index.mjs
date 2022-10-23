@@ -45,7 +45,6 @@ export const justCopy = (options) => {
     }
 
     const parsedReplacedPaths = composeReplacedTo(rawFrom, rawTo);
-    console.log(parsedReplacedPaths);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext.startsWith(".")) {
         return join(parsedPath.dir, parsedPath.base);
@@ -95,6 +94,16 @@ export const justCopy = (options) => {
     return replacedPathsMapping(replaced);
   }
 
+  // compose object from `from` paths (globbed or not)
+  const composeFromObject = (rawFrom) => {
+    if (isGlob(rawFrom)) {
+      const filePaths = glob.sync(rawFrom);
+      return filePaths.map((_path) => parse(_path));
+    } else {
+      return [rawFrom].map((_path) => parse(_path));
+    }
+  }
+
   // Rename to composedPaths
   const replacedPathsMapping = (replaced) => {
     return replaced.map((_path) => parse(_path));
@@ -119,12 +128,14 @@ export const justCopy = (options) => {
           for (const path of composeToDirs(from, to)) {
             try {
               const createDir = await mkdir(path, { recursive: true });
-              // composeToFilesOnGlobbed(from, to);
+              console.log("composeFromObject: ", composeFromObject(from));
             } catch (err) {
               console.error(err.message);
             }
           }
         } else {
+          console.log("composeFromObject: ", composeFromObject(from));
+
           if (!isFile(from)) {
             errors.push({ text: `${from} is not a file` });
             return {
