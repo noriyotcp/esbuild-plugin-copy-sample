@@ -24,7 +24,7 @@ export const justCopy = (options) => {
     const { dir } = parse(_path);
 
     return dir.endsWith("/**");
-  }
+  };
 
   const composeToDirs = (rawFrom, rawTo) => {
     if (!isGlob(rawFrom)) {
@@ -32,11 +32,13 @@ export const justCopy = (options) => {
     }
 
     const parsedReplacedPaths = composeToObject(rawFrom, rawTo);
-    return parsedReplacedPaths.map((parsedPath) => {
-      if (parsedPath.ext === "") {
-        return join(parsedPath.dir, parsedPath.base);
-      }
-    }).filter((dir) => dir !== undefined);
+    return parsedReplacedPaths
+      .map((parsedPath) => {
+        if (parsedPath.ext === "") {
+          return join(parsedPath.dir, parsedPath.base);
+        }
+      })
+      .filter((dir) => dir !== undefined);
   };
 
   const composeToFiles = (rawFrom, rawTo) => {
@@ -45,11 +47,13 @@ export const justCopy = (options) => {
     }
 
     const parsedReplacedPaths = composeToObject(rawFrom, rawTo);
-    return parsedReplacedPaths.map((parsedPath) => {
-      if (parsedPath.ext.startsWith(".")) {
-        return join(parsedPath.dir, parsedPath.base);
-      }
-    }).filter((path) => path !== undefined);
+    return parsedReplacedPaths
+      .map((parsedPath) => {
+        if (parsedPath.ext.startsWith(".")) {
+          return join(parsedPath.dir, parsedPath.base);
+        }
+      })
+      .filter((path) => path !== undefined);
   };
 
   const composeToObject = (rawFrom, rawTo) => {
@@ -67,7 +71,7 @@ export const justCopy = (options) => {
       replaced = [rawTo];
     }
     return replacedPathsMapping(replaced);
-  }
+  };
 
   // compose object from `from` paths (globbed or not)
   const composeFromObject = (rawFrom) => {
@@ -77,20 +81,22 @@ export const justCopy = (options) => {
     } else {
       return [rawFrom].map((_path) => parse(_path));
     }
-  }
+  };
 
   // merge composed objects
-  const mergeComposedObjects = ({ fromObject, toObject, mode="all" }) => {
+  const mergeComposedObjects = ({ fromObject, toObject, mode = "all" }) => {
     let fromPaths, toPaths;
 
-    if (mode === "files") { // with extension
+    if (mode === "files") {
+      // with extension
       fromPaths = fromObject
         .filter((fo) => fo.ext.startsWith("."))
         .flatMap((fo) => join(fo.dir, fo.base));
       toPaths = toObject
         .filter((fo) => fo.ext.startsWith("."))
         .flatMap((to) => join(to.dir, to.base));
-    } else if (mode === "dirs") { // without extension
+    } else if (mode === "dirs") {
+      // without extension
       fromPaths = fromObject
         .filter((fo) => fo.ext === "")
         .flatMap((fo) => join(fo.dir, fo.base));
@@ -105,7 +111,7 @@ export const justCopy = (options) => {
     return fromPaths.map((fo, i) => {
       return { from: fromPaths[i], to: toPaths[i] };
     });
-  }
+  };
 
   // Rename to composedPaths
   const replacedPathsMapping = (replaced) => {
@@ -117,7 +123,7 @@ export const justCopy = (options) => {
       errors.push({ text: err.message });
       return { errors };
     });
-  }
+  };
 
   // for testing
   const consoleForcomposingObjects = (from, to) => {
@@ -146,10 +152,10 @@ export const justCopy = (options) => {
         toObject: composeToObject(from, to),
       })
     );
-  }
+  };
 
   return {
-    name: 'just-copy',
+    name: "just-copy",
     setup(build) {
       build.onLoad({ filter: /.*/ }, async (args) => {
         if (isGlob(from)) {
@@ -181,7 +187,9 @@ export const justCopy = (options) => {
           } else {
             composeToFiles(from, to).forEach(async (toPath) => {
               try {
-                const createDir = await mkdir(dirname(toPath), { recursive: true });
+                const createDir = await mkdir(dirname(toPath), {
+                  recursive: true,
+                });
               } catch (err) {
                 console.error(err.message);
               }
@@ -191,9 +199,9 @@ export const justCopy = (options) => {
         }
       });
 
-      build.onEnd(result => {
+      build.onEnd((result) => {
         console.log(`Build completed ${JSON.stringify(result)}`);
       });
     },
-  }
+  };
 };
