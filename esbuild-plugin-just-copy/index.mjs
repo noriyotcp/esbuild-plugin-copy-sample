@@ -188,6 +188,29 @@ export const justCopy = (options) => {
         } else {
           console.log("composeFromObject: ", composeFromObject(from));
           console.log("composeToObject", composeToObject(from, to));
+          console.log(
+            "mergeComposedObjects",
+            mergeComposedObjects({
+              fromObject: composeFromObject(from),
+              toObject: composeToObject(from, to),
+              mode: "files",
+            })
+          );
+          console.log(
+            "mergeComposedObjects",
+            mergeComposedObjects({
+              fromObject: composeFromObject(from),
+              toObject: composeToObject(from, to),
+              mode: "dirs",
+            })
+          );
+          console.log(
+            "mergeComposedObjects",
+            mergeComposedObjects({
+              fromObject: composeFromObject(from),
+              toObject: composeToObject(from, to),
+            })
+          );
 
           if (!isFile(from)) {
             errors.push({ text: `${from} is not a file` });
