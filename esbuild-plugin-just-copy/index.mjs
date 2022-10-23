@@ -174,7 +174,7 @@ export const justCopy = (options) => {
             mode: "files",
           });
           filePaths.forEach(async (path) => {
-            await copySingleFile(path.from, path.to);
+            return await copySingleFile(path.from, path.to);
           });
         } else {
           consoleForcomposingObjects(from, to);
