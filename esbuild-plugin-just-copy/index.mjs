@@ -46,24 +46,49 @@ export const justCopy = (options) => {
     }).filter((dir) => dir !== undefined);
   };
 
+  const composeToFiles = (rawFrom, rawTo) => {
+    if (isGlob(rawFrom)) {
+      return; // TODO: throw error
+    }
+
+    const startFragment = path.parse(rawFrom).dir;
+    const fromPaths = glob.sync(from);
+    const replaced = fromPaths.map((fromPath) => {
+      return fromPath.replace(startFragment, rawTo);
+    });
+    const parsedReplacedPaths = replaced.map((_path) => path.parse(_path));
+    console.log(parsedReplacedPaths);
+    return parsedReplacedPaths.map((parsedPath) => {
+      if (parsedPath.ext.startsWith(".")) {
+        return parsedPath.dir;
+      }
+    }).filter((path) => path !== undefined);
+  };
+
   const absoluteDirs = (absPaths) => {
     return absPaths.map((p) => path.dirname(p));
+  }
+
+  const copySingleFile = async (from, to) => {
+    await fs.promises.copyFile(from, to, 0, (err) => {
+      errors.push({ text: err.message });
+      return { errors };
+    });
   }
 
   return {
     name: 'just-copy',
     setup(build) {
       build.onLoad({ filter: /.*/ }, async (args) => {
-        for (const path of composeToDirs(from, to)) {
-          try {
-            const createDir = await mkdir(path, { recursive: true });
-            console.log(`created ${createDir}`);
-          } catch (err) {
-            console.error(err.message);
-          }
-        }
-
         if (isGlob(from)) {
+          for (const path of composeToDirs(from, to)) {
+            try {
+              const createDir = await mkdir(path, { recursive: true });
+              console.log(`created ${createDir}`);
+            } catch (err) {
+              console.error(err.message);
+            }
+          }
         } else {
           if (!isFile(from)) {
             errors.push({ text: `${from} is not a file` });
@@ -71,9 +96,14 @@ export const justCopy = (options) => {
               errors,
             };
           } else {
-            await fs.promises.copyFile(from, to, 0, (err) => {
-              errors.push({ text: err.message });
-              return { errors };
+            composeToFiles(from, to).forEach(async (toPath) => {
+              // try {
+              //   const createDir = await mkdir(path.dirname(toPath), { recursive: true });
+              //   console.log(`created ${createDir}`);
+              // } catch (err) {
+              //   console.error(err.message);
+              // }
+              return await copySingleFile(from, toPath);
             });
           }
         }
