@@ -101,12 +101,12 @@ export const justCopy = (options) => {
             };
           } else {
             composeToFiles(from, to).forEach(async (toPath) => {
-              // try {
-              //   const createDir = await mkdir(path.dirname(toPath), { recursive: true });
-              //   console.log(`created ${createDir}`);
-              // } catch (err) {
-              //   console.error(err.message);
-              // }
+              try {
+                const createDir = await mkdir(path.dirname(toPath), { recursive: true });
+                console.log(`created ${createDir}`);
+              } catch (err) {
+                console.error(err.message);
+              }
               return await copySingleFile(from, toPath);
             });
           }
