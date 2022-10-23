@@ -20,24 +20,24 @@ export const justCopy = (options) => {
     return stat.isFile();
   };
 
-  const composeToDirs = (rawFrom, rawTo) => {
-    const { dir } = path.parse(rawFrom);
+  const isGlob = (_path) => {
+    const { dir } = path.parse(_path);
 
-    if (!dir.endsWith === "/**") {
+    return dir.endsWith("/**");
+  }
+
+  const composeToDirs = (rawFrom, rawTo) => {
+    if (!isGlob(rawFrom)) {
       return; // TODO: throw error
     }
 
+    const { dir } = path.parse(rawFrom);
+
     const startFragment = dir.replace(`/**`, "");
-    console.log(startFragment);
-    // absolute paths include file name
-    // const fromPaths = glob.sync(from, { absolute: true });
     const fromPaths = glob.sync(from);
-    console.log(fromPaths);
     const replaced = fromPaths.map((fromPath) => {
       return fromPath.replace(startFragment, rawTo);
     });
-    // console.log(replaced);
-    // objects
     const parsedReplacedPaths = replaced.map((_path) => path.parse(_path));
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext === "") {
@@ -63,16 +63,19 @@ export const justCopy = (options) => {
           }
         }
 
-        if (!isFile(from)) {
-          errors.push({ text: `${from} is not a file` });
-          return {
-            errors,
-          };
+        if (isGlob(from)) {
         } else {
-          await fs.promises.copyFile(from, to, 0, (err) => {
-            errors.push({ text: err.message });
-            return { errors };
-          });
+          if (!isFile(from)) {
+            errors.push({ text: `${from} is not a file` });
+            return {
+              errors,
+            };
+          } else {
+            await fs.promises.copyFile(from, to, 0, (err) => {
+              errors.push({ text: err.message });
+              return { errors };
+            });
+          }
         }
       });
 
