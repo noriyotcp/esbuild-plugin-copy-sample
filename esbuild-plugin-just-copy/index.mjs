@@ -38,7 +38,7 @@ export const justCopy = (options) => {
     const replaced = fromPaths.map((fromPath) => {
       return fromPath.replace(startFragment, rawTo);
     });
-    const parsedReplacedPaths = replaced.map((_path) => path.parse(_path));
+    const parsedReplacedPaths = replacedPathsMapping(replaced);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext === "") {
         return path.join(parsedPath.dir, parsedPath.base);
@@ -56,13 +56,17 @@ export const justCopy = (options) => {
     const replaced = fromPaths.map((fromPath) => {
       return fromPath.replace(startFragment, rawTo);
     });
-    const parsedReplacedPaths = replaced.map((_path) => path.parse(_path));
+    const parsedReplacedPaths = replacedPathsMapping(replaced);
     console.log(parsedReplacedPaths);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext.startsWith(".")) {
         return parsedPath.dir;
       }
     }).filter((path) => path !== undefined);
+  };
+
+  const replacedPathsMapping = (replaced) => {
+    return replaced.map((_path) => path.parse(_path));
   };
 
   const absoluteDirs = (absPaths) => {
