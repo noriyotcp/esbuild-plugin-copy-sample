@@ -31,7 +31,7 @@ export const justCopy = (options) => {
       return; // TODO: throw error
     }
 
-    const parsedReplacedPaths = composeReplacedTo(rawFrom, rawTo);
+    const parsedReplacedPaths = composeToObject(rawFrom, rawTo);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext === "") {
         return join(parsedPath.dir, parsedPath.base);
@@ -44,7 +44,7 @@ export const justCopy = (options) => {
       return; // TODO: throw error
     }
 
-    const parsedReplacedPaths = composeReplacedTo(rawFrom, rawTo);
+    const parsedReplacedPaths = composeToObject(rawFrom, rawTo);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext.startsWith(".")) {
         return join(parsedPath.dir, parsedPath.base);
@@ -53,7 +53,7 @@ export const justCopy = (options) => {
   };
 
   const composeToFilesOnGlobbed = (rawFrom, rawTo) => {
-    const parsedReplacedPaths = composeReplacedTo(rawFrom, rawTo);
+    const parsedReplacedPaths = composeToObject(rawFrom, rawTo);
     return parsedReplacedPaths.map((parsedPath) => {
       if (parsedPath.ext.startsWith(".")) {
         return join(parsedPath.dir, parsedPath.base);
@@ -77,7 +77,7 @@ export const justCopy = (options) => {
       .filter((path) => path !== undefined);
   }
 
-  const composeReplacedTo = (rawFrom, rawTo) => {
+  const composeToObject = (rawFrom, rawTo) => {
     let replaced;
 
     if (isGlob(rawFrom)) {
@@ -127,14 +127,16 @@ export const justCopy = (options) => {
         if (isGlob(from)) {
           for (const path of composeToDirs(from, to)) {
             try {
-              const createDir = await mkdir(path, { recursive: true });
+              await mkdir(path, { recursive: true });
               console.log("composeFromObject: ", composeFromObject(from));
+              console.log("composeToObject", composeToObject(from, to));
             } catch (err) {
               console.error(err.message);
             }
           }
         } else {
           console.log("composeFromObject: ", composeFromObject(from));
+          console.log("composeToObject", composeToObject(from, to));
 
           if (!isFile(from)) {
             errors.push({ text: `${from} is not a file` });
