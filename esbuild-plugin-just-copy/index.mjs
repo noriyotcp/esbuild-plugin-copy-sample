@@ -148,6 +148,35 @@ export const justCopy = (options) => {
     });
   }
 
+  // for testing
+  const consoleForcomposingObjects = (from, to) => {
+    console.log("composeFromObject: ", composeFromObject(from));
+    console.log("composeToObject", composeToObject(from, to));
+    console.log(
+      "mergeComposedObjects",
+      mergeComposedObjects({
+        fromObject: composeFromObject(from),
+        toObject: composeToObject(from, to),
+        mode: "files",
+      })
+    );
+    console.log(
+      "mergeComposedObjects",
+      mergeComposedObjects({
+        fromObject: composeFromObject(from),
+        toObject: composeToObject(from, to),
+        mode: "dirs",
+      })
+    );
+    console.log(
+      "mergeComposedObjects",
+      mergeComposedObjects({
+        fromObject: composeFromObject(from),
+        toObject: composeToObject(from, to),
+      })
+    );
+  }
+
   return {
     name: 'just-copy',
     setup(build) {
@@ -156,61 +185,13 @@ export const justCopy = (options) => {
           for (const path of composeToDirs(from, to)) {
             try {
               await mkdir(path, { recursive: true });
-              console.log("composeFromObject: ", composeFromObject(from));
-              console.log("composeToObject", composeToObject(from, to));
-              console.log(
-                "mergeComposedObjects",
-                mergeComposedObjects({
-                  fromObject: composeFromObject(from),
-                  toObject: composeToObject(from, to),
-                  mode: "files",
-                })
-              );
-              console.log(
-                "mergeComposedObjects",
-                mergeComposedObjects({
-                  fromObject: composeFromObject(from),
-                  toObject: composeToObject(from, to),
-                  mode: "dirs",
-                })
-              );
-              console.log(
-                "mergeComposedObjects",
-                mergeComposedObjects({
-                  fromObject: composeFromObject(from),
-                  toObject: composeToObject(from, to),
-                })
-              );
+              consoleForcomposingObjects(from, to);
             } catch (err) {
               console.error(err.message);
             }
           }
         } else {
-          console.log("composeFromObject: ", composeFromObject(from));
-          console.log("composeToObject", composeToObject(from, to));
-          console.log(
-            "mergeComposedObjects",
-            mergeComposedObjects({
-              fromObject: composeFromObject(from),
-              toObject: composeToObject(from, to),
-              mode: "files",
-            })
-          );
-          console.log(
-            "mergeComposedObjects",
-            mergeComposedObjects({
-              fromObject: composeFromObject(from),
-              toObject: composeToObject(from, to),
-              mode: "dirs",
-            })
-          );
-          console.log(
-            "mergeComposedObjects",
-            mergeComposedObjects({
-              fromObject: composeFromObject(from),
-              toObject: composeToObject(from, to),
-            })
-          );
+          consoleForcomposingObjects(from, to);
 
           if (!isFile(from)) {
             errors.push({ text: `${from} is not a file` });
