@@ -27,20 +27,20 @@ export const justCopy = (options) => {
   };
 
   const composeToObject = (rawFrom, rawTo) => {
-    let replaced;
+    let toPaths;
 
     if (isGlob(rawFrom)) {
       const { dir } = parse(rawFrom);
 
       const startFragment = dir.replace(`/**`, "");
       const fromPaths = glob.sync(from);
-      replaced = fromPaths.map((fromPath) => {
+      toPaths = fromPaths.map((fromPath) => {
         return fromPath.replace(startFragment, rawTo);
       });
     } else {
-      replaced = [rawTo];
+      toPaths = [rawTo];
     }
-    return replacedPathsMapping(replaced);
+    return toPaths.map((_path) => parse(_path));
   };
 
   // compose object from `from` paths (globbed or not)
@@ -81,11 +81,6 @@ export const justCopy = (options) => {
     return fromPaths.map((fo, i) => {
       return { from: fromPaths[i], to: toPaths[i] };
     });
-  };
-
-  // Rename to composedPaths
-  const replacedPathsMapping = (replaced) => {
-    return replaced.map((_path) => parse(_path));
   };
 
   const copySingleFile = async (from, to) => {
