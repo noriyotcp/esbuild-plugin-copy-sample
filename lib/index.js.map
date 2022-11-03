@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../src/index.ts"],
-  "sourcesContent": ["console.log('hello')\n"],
+  "sourcesContent": ["console.log('hello');\n"],
   "mappings": ";;;AAAA,QAAQ,IAAI,OAAO;",
   "names": []
 }
