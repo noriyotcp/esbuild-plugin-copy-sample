@@ -16,9 +16,9 @@ const pairsOfDirectories = ({ sourceDirs, distDir }) => {
     const { dir, base } = parse(sourceDir);
     // if dir is "" then it's the root directory
     return {
-      "source": `${sourceDir}`,
-      "dist": dir === '' ? `${distDir}` : `${distDir}/${base}`,
-    }
+      source: `${sourceDir}`,
+      dist: dir === "" ? `${distDir}` : `${distDir}/${base}`,
+    };
   });
 };
 
