@@ -2,8 +2,6 @@ import fs from "node:fs";
 import glob from "glob";
 import { parse } from "node:path";
 
-// It return an array of directories
-// ["assets", "assets/javascript", "assets/no-file"];
 const sourceDirectories = (globbedPath) => {
   const parentDir = globbedPath.replace(`/**/*`, "");
   const childDirs = fs
@@ -13,10 +11,6 @@ const sourceDirectories = (globbedPath) => {
   return [parentDir, ...childDirs];
 };
 
-// sourceDirs is an array of strings (paths)
-// ["assets", "assets/javascript", "assets/no-file"];
-// distDir is a string (path)
-// "public/subdir"
 const pairsOfDirectories = ({ sourceDirs, distDir }) => {
   return sourceDirs.map((sourceDir) => {
     const { dir, base } = parse(sourceDir);
