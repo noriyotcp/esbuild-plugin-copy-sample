@@ -1,6 +1,10 @@
 import glob from "glob";
 import { parse } from "node:path";
 
+const sum = (a, b) => {
+  return a + b;
+}
+
 const composeToObject = (rawFrom, rawTo) => {
   let toPaths;
 
@@ -34,4 +38,4 @@ const isGlob = (_path) => {
   return dir.endsWith("/**");
 };
 
-export { composeFromObject, composeToObject, isGlob };
+export { composeFromObject, composeToObject, isGlob, sum };
