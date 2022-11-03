@@ -11,6 +11,15 @@ const sourceDirectories = (globbedPath) => {
   return [parentDir, ...childDirs];
 };
 
+const sourceFiles = (dir) => {
+  const files = fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter((item) => item.isFile())
+    .map((item) => `${dir}/${item.name}`);
+
+  return { dir, files };
+};
+
 const pairsOfDirectories = ({ sourceDirs, distDir }) => {
   return sourceDirs.map((sourceDir) => {
     const { dir, base } = parse(sourceDir);
@@ -60,5 +69,6 @@ export {
   composeToObject,
   isGlob,
   sourceDirectories,
+  sourceFiles,
   pairsOfDirectories,
 };
