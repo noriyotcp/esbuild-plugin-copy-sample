@@ -13,6 +13,21 @@ const sourceDirectories = (globbedPath) => {
   return [parentDir, ...childDirs];
 };
 
+// sourceDirs is an array of strings (paths)
+// ["assets", "assets/javascript", "assets/no-file"];
+// distDir is a string (path)
+// "public/subdir"
+const pairsOfDirectories = ({ sourceDirs, distDir }) => {
+  return sourceDirs.map((sourceDir) => {
+    const { dir, base } = parse(sourceDir);
+    // if dir is "" then it's the root directory
+    return {
+      "source": `${sourceDir}`,
+      "dist": dir === '' ? `${distDir}` : `${distDir}/${base}`,
+    }
+  });
+};
+
 const composeToObject = (rawFrom, rawTo) => {
   let toPaths;
 
@@ -46,4 +61,10 @@ const isGlob = (_path) => {
   return dir.endsWith("/**");
 };
 
-export { composeFromObject, composeToObject, isGlob, sourceDirectories };
+export {
+  composeFromObject,
+  composeToObject,
+  isGlob,
+  sourceDirectories,
+  pairsOfDirectories,
+};
