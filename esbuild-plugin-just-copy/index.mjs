@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import glob from "glob";
 import { mkdir } from "node:fs/promises";
-import { parse, join, dirname } from "node:path";
+import { join, dirname } from "node:path";
+import { composeFromObject, composeToObject, isGlob } from "./composers.mjs";
 
 export const justCopy = (options) => {
   const errors = [];
@@ -18,39 +18,6 @@ export const justCopy = (options) => {
       }
     });
     return stat.isFile();
-  };
-
-  const isGlob = (_path) => {
-    const { dir } = parse(_path);
-
-    return dir.endsWith("/**");
-  };
-
-  const composeToObject = (rawFrom, rawTo) => {
-    let toPaths;
-
-    if (isGlob(rawFrom)) {
-      const { dir } = parse(rawFrom);
-
-      const startFragment = dir.replace(`/**`, "");
-      const fromPaths = glob.sync(from);
-      toPaths = fromPaths.map((fromPath) => {
-        return fromPath.replace(startFragment, rawTo);
-      });
-    } else {
-      toPaths = [rawTo];
-    }
-    return toPaths.map((_path) => parse(_path));
-  };
-
-  // compose object from `from` paths (globbed or not)
-  const composeFromObject = (rawFrom) => {
-    if (isGlob(rawFrom)) {
-      const filePaths = glob.sync(rawFrom);
-      return filePaths.map((_path) => parse(_path));
-    } else {
-      return [rawFrom].map((_path) => parse(_path));
-    }
   };
 
   // merge composed objects
