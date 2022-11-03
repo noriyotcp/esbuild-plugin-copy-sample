@@ -3,6 +3,8 @@ import glob from "glob";
 import { copy } from "esbuild-plugin-copy";
 import { justCopy } from "./esbuild-plugin-just-copy/index.mjs";
 
+// import { justCopy } from "esbuild-plugin-just-copy";
+
 const entryPoints = glob.sync('src/**/*.ts');
 
 const options = {
