@@ -1,5 +1,11 @@
-import { sum } from "./composers.mjs";
+import { sourceDirectories } from "./composers.mjs";
 
-test("adds 1 + 2 to equal 3", () => {
-  expect(sum(1, 2)).toBe(3);
+test('sourceDirectories', () => {
+  const directories = [
+    'assets',
+    'assets/javascript',
+    'assets/no-file',
+  ]
+
+  expect(sourceDirectories('assets/**/*')).toEqual(directories)
 });

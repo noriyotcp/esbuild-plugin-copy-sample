@@ -1,9 +1,17 @@
+import fs from "node:fs";
 import glob from "glob";
 import { parse } from "node:path";
 
-const sum = (a, b) => {
-  return a + b;
-}
+// It return an array of directories
+// ["assets", "assets/javascript", "assets/no-file"];
+const sourceDirectories = (globbedPath) => {
+  const parentDir = globbedPath.replace(`/**/*`, "");
+  const childDirs = fs
+    .readdirSync(parentDir, { withFileTypes: true })
+    .filter((item) => item.isDirectory())
+    .map((item) => `${parentDir}/${item.name}`);
+  return [parentDir, ...childDirs];
+};
 
 const composeToObject = (rawFrom, rawTo) => {
   let toPaths;
@@ -38,4 +46,4 @@ const isGlob = (_path) => {
   return dir.endsWith("/**");
 };
 
-export { composeFromObject, composeToObject, isGlob, sum };
+export { composeFromObject, composeToObject, isGlob, sourceDirectories };
