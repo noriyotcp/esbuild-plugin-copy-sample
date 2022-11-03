@@ -1,6 +1,7 @@
 import {
   sourceDirectories,
   sourceFiles,
+  pairOfFiles,
   pairsOfDirectories,
 } from "./composers.mjs";
 
@@ -52,4 +53,28 @@ test("sourceFiles() with subdirectories", () => {
   };
 
   expect(sourceFiles(sourceDir)).toEqual(expected);
+});
+
+test("pairOfFiles", () => {
+  const sourceFiles = {
+    dir: "assets",
+    files: ["assets/no-ext", "assets/test.ts", "assets/test2.ts"],
+  };
+
+  const expected = [
+    {
+      source: "assets/no-ext",
+      dist: "public/subdir/no-ext",
+    },
+    {
+      source: "assets/test.ts",
+      dist: "public/subdir/test.ts",
+    },
+    {
+      source: "assets/test2.ts",
+      dist: "public/subdir/test2.ts",
+    },
+  ];
+
+  expect(pairOfFiles(sourceFiles, "public/subdir")).toEqual(expected);
 });

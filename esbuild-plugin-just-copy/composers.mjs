@@ -20,6 +20,15 @@ const sourceFiles = (dir) => {
   return { dir, files };
 };
 
+const pairOfFiles = (sourceFiles, distDir) => {
+  const { dir, files } = sourceFiles;
+
+  // replace the source directory with the dist directory
+  return files.map((file) => {
+    return { source: file, dist: file.replace(dir, distDir) };
+  });
+};
+
 const pairsOfDirectories = ({ sourceDirs, distDir }) => {
   return sourceDirs.map((sourceDir) => {
     const { dir, base } = parse(sourceDir);
@@ -70,5 +79,6 @@ export {
   isGlob,
   sourceDirectories,
   sourceFiles,
+  pairOfFiles,
   pairsOfDirectories,
 };
