@@ -22,10 +22,11 @@ const sourceFiles = (dir) => {
 
 const pairOfFiles = (sourceFiles, distDir) => {
   const { dir, files } = sourceFiles;
+  const parent = dir.match(/\.\/\w+/)[0];
 
-  // replace the source directory with the dist directory
+  // replace the source path with the dist path
   return files.map((file) => {
-    return { source: file, dist: file.replace(dir, distDir) };
+    return { source: file, dist: file.replace(`${parent}`, distDir) };
   });
 };
 

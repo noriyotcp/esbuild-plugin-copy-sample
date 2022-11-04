@@ -44,11 +44,13 @@ export const justCopy = (options) => {
             );
           // copy files
           try {
+            // sourceFiles()
             sourceDirs.forEach((sourceDir) => {
-              const { dir, files } = sourceFiles(sourceDir);
-              pairOfFiles({ dir, files }, to).forEach(({ source, dist }) => {
-                fs.copyFileSync(source, dist);
-              });
+              pairOfFiles(sourceFiles(sourceDir), to).forEach(
+                ({ source, dist }) => {
+                  fs.copyFileSync(source, dist);
+                }
+              );
             });
           } catch (err) {
             errors.push({ text: err.message });

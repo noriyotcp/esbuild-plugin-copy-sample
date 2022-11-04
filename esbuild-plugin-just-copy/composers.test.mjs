@@ -58,24 +58,28 @@ test("sourceFiles() with subdirectories", () => {
 
 test("pairOfFiles", () => {
   const sourceFiles = {
-    dir: "assets",
-    files: ["assets/no-ext", "assets/test.ts", "assets/test2.ts"],
+    dir: "./assets",
+    files: ["./assets/no-ext", "./assets/test.ts", "./assets/test2.ts", "./assets/javascript/test-in-dir.ts"],
   };
 
   const expected = [
     {
-      source: "assets/no-ext",
-      dist: "public/subdir/no-ext",
+      source: "./assets/no-ext",
+      dist: "./public/subdir/no-ext",
     },
     {
-      source: "assets/test.ts",
-      dist: "public/subdir/test.ts",
+      source: "./assets/test.ts",
+      dist: "./public/subdir/test.ts",
     },
     {
-      source: "assets/test2.ts",
-      dist: "public/subdir/test2.ts",
+      source: "./assets/test2.ts",
+      dist: "./public/subdir/test2.ts",
+    },
+    {
+      source: "./assets/javascript/test-in-dir.ts",
+      dist: "./public/subdir/javascript/test-in-dir.ts",
     },
   ];
 
-  expect(pairOfFiles(sourceFiles, "public/subdir")).toEqual(expected);
+  expect(pairOfFiles(sourceFiles, "./public/subdir")).toEqual(expected);
 });
