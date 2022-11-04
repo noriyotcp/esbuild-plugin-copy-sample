@@ -28,6 +28,14 @@ export const justCopy = (options) => {
     name: "just-copy",
     setup(build) {
       build.onLoad({ filter: /.*/ }, async (args) => {
+        if (/\/$/.test(from)) {
+          errors.push({ text: "`from` must not end with `/`" });
+          return { errors };
+        } else if (/\/$/.test(to)) {
+          errors.push({ text: "`to` must not end with `/`" });
+          return { errors };
+        }
+
         if (isGlob(from)) {
           const sourceDirs = sourceDirectories(from);
           try {
