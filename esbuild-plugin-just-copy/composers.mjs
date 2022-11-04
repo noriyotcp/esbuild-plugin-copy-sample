@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import glob from "glob";
-import { parse } from "node:path";
+import path, { parse } from "node:path";
 
 const sourceDirectories = (globbedPath) => {
   const parentDir = globbedPath.replace(`/**/*`, "");
@@ -30,13 +30,16 @@ const pairOfFiles = (sourceFiles, distDir) => {
 };
 
 const pairsOfDirectories = ({ sourceDirs, distDir }) => {
+  const parent = sourceDirs[0].split("/")[1];
   return sourceDirs.map((sourceDir) => {
-    const { dir, base } = parse(sourceDir);
-    // if dir is "" then it's the root directory
-    return {
-      source: `${sourceDir}`,
-      dist: dir === "" ? `${distDir}` : `${distDir}/${base}`,
-    };
+    const { dir } = parse(sourceDir);
+    // if dir is '.', it's the root directory
+    if (dir === '.') {
+      return { source: sourceDir, dist: distDir };
+    } else {
+      const dist = `./${path.join(`${distDir}`, sourceDir.replace(`./${parent}`, ""))}`;
+      return { source: sourceDir, dist };
+    }
   });
 };
 
