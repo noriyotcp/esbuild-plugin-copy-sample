@@ -15,15 +15,6 @@ export const justCopy = (options) => {
 
   console.log(options);
 
-  const isFile = (path) => {
-    try {
-      const stat = fs.statSync(path);
-      return stat.isFile();
-    } catch (err) {
-      errors.push({ text: err.message });
-    }
-  };
-
   return {
     name: "just-copy",
     setup(build) {
@@ -58,15 +49,21 @@ export const justCopy = (options) => {
           }
         } else {
           // copy a single file
-          if (!isFile(from)) {
-            errors.push({ text: `${from} is not a file` });
-          } else {
-            try {
-              fs.mkdirSync(dirname(to), { recursive: true });
-              fs.copyFileSync(from, to);
-            } catch (error) {
-              errors.push({ text: error.message });
+          try {
+            if (!fs.statSync(from).isFile()) {
+              errors.push({ text: `${from} is not a file` });
+              return { errors };
             }
+          } catch (err) {
+            errors.push({ text: err.message });
+            return { errors };
+          }
+
+          try {
+            fs.mkdirSync(dirname(to), { recursive: true });
+            fs.copyFileSync(from, to);
+          } catch (error) {
+            errors.push({ text: error.message });
           }
         }
         // return aggregated errors
