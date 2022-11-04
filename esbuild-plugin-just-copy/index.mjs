@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { join, dirname } from "node:path";
-import { isGlob } from "./composers.mjs";
+import { isGlob, sourceDirectories, pairsOfDirectories } from "./composers.mjs";
 
 export const justCopy = (options) => {
   const errors = [];
@@ -26,7 +26,15 @@ export const justCopy = (options) => {
       build.onLoad({ filter: /.*/ }, async (args) => {
         if (isGlob(from)) {
           // create dirs
-
+          pairsOfDirectories({ sourceDirs: sourceDirectories(from), distDir: to }).forEach(
+              ({ dist }) => {
+                mkdir(dist, { recursive: true }, (err) => {
+                  if (err) {
+                    errors.push(err.message);
+                  }
+                });
+              }
+            );
           // copy files
         } else { // copy file
           if (!isFile(from)) {
