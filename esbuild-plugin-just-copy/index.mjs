@@ -17,13 +17,12 @@ export const justCopy = (options) => {
   console.log(options);
 
   const isFile = (path) => {
-    const stat = fs.statSync(path, (err, stats) => {
-      if (err) {
-        errors.push(err.message);
-        return;
-      }
-    });
-    return stat.isFile();
+    try {
+      const stat = fs.statSync(path);
+      return stat.isFile();
+    } catch (err) {
+      errors.push({ text: err.message });
+    }
   };
 
   return {
@@ -31,20 +30,15 @@ export const justCopy = (options) => {
     setup(build) {
       build.onLoad({ filter: /.*/ }, async (args) => {
         if (isGlob(from)) {
-          // create dirs
           const sourceDirs = sourceDirectories(from);
-          pairsOfDirectories({ sourceDirs, distDir: to }).forEach(
+          try {
+            // create dirs
+            pairsOfDirectories({ sourceDirs, distDir: to }).forEach(
               ({ dist }) => {
-                mkdirSync(dist, { recursive: true }, (err) => {
-                  if (err) {
-                    errors.push(err.message);
-                  }
-                });
+                mkdirSync(dist, { recursive: true });
               }
             );
-          // copy files
-          try {
-            // sourceFiles()
+            // copy files
             sourceDirs.forEach((sourceDir) => {
               pairOfFiles(sourceFiles(sourceDir), to).forEach(
                 ({ source, dist }) => {
@@ -55,13 +49,10 @@ export const justCopy = (options) => {
           } catch (err) {
             errors.push({ text: err.message });
           }
-          return { errors: errors };
-        } else { // copy a single file
+        } else {
+          // copy a single file
           if (!isFile(from)) {
             errors.push({ text: `${from} is not a file` });
-            return {
-              errors,
-            };
           } else {
             try {
               mkdirSync(dirname(to), { recursive: true });
@@ -70,8 +61,9 @@ export const justCopy = (options) => {
               errors.push({ text: error.message });
             }
           }
-          return { errors: errors };
         }
+        // return aggregated errors
+        return { errors };
       });
 
       build.onEnd((result) => {
