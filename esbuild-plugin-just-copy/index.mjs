@@ -26,7 +26,8 @@ export const justCopy = (options) => {
       build.onLoad({ filter: /.*/ }, async (args) => {
         if (isGlob(from)) {
           // create dirs
-          pairsOfDirectories({ sourceDirs: sourceDirectories(from), distDir: to }).forEach(
+          const sourceDirs = sourceDirectories(from);
+          pairsOfDirectories({ sourceDirs, distDir: to }).forEach(
               ({ dist }) => {
                 mkdir(dist, { recursive: true }, (err) => {
                   if (err) {
