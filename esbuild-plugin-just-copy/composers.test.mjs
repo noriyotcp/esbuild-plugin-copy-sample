@@ -35,22 +35,22 @@ test("pairsOfDirectories", () => {
 });
 
 test("sourceFiles()", () => {
-  const sourceDir = "assets";
+  const sourceDir = "./assets";
 
   const expected = {
-    dir: "assets",
-    files: ["assets/no-ext", "assets/test.ts", "assets/test2.ts"],
+    dir: "./assets",
+    files: ["./assets/no-ext", "./assets/test.ts", "./assets/test2.ts"],
   };
 
   expect(sourceFiles(sourceDir)).toEqual(expected);
 });
 
 test("sourceFiles() with subdirectories", () => {
-  const sourceDir = "assets/javascript";
+  const sourceDir = "./assets/javascript";
 
   const expected = {
-    dir: "assets/javascript",
-    files: ["assets/javascript/test-in-dir.ts"],
+    dir: "./assets/javascript",
+    files: ["./assets/javascript/test-in-dir.ts"],
   };
 
   expect(sourceFiles(sourceDir)).toEqual(expected);
