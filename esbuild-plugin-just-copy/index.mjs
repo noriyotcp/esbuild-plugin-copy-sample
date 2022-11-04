@@ -1,6 +1,5 @@
-import fs, { mkdirSync } from "node:fs";
-import { mkdir } from "node:fs/promises";
-import { join, dirname } from "node:path";
+import fs from "node:fs";
+import { dirname } from "node:path";
 import {
   isGlob,
   sourceDirectories,
@@ -35,7 +34,7 @@ export const justCopy = (options) => {
             // create dirs
             pairsOfDirectories({ sourceDirs, distDir: to }).forEach(
               ({ dist }) => {
-                mkdirSync(dist, { recursive: true });
+                fs.mkdirSync(dist, { recursive: true });
               }
             );
             // copy files
@@ -55,7 +54,7 @@ export const justCopy = (options) => {
             errors.push({ text: `${from} is not a file` });
           } else {
             try {
-              mkdirSync(dirname(to), { recursive: true });
+              fs.mkdirSync(dirname(to), { recursive: true });
               fs.copyFileSync(from, to);
             } catch (error) {
               errors.push({ text: error.message });
