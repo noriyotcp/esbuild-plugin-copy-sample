@@ -27,8 +27,10 @@ const options = {
     justCopy({
       resolveFrom: "cwd",
       assets: {
-        from: ["./assets/test.ts"],
-        to: ["./just-copy-assets/test.ts"],
+        // from: ["./assets/javascript/test-in-dir.ts"],
+        // to: ["./just-copy-assets/javascripts/test-in-dir.ts"],
+        from: ["./assets/**/*"],
+        to: ["./just-copy-assets"],
         keepStructure: true,
       },
     }),
