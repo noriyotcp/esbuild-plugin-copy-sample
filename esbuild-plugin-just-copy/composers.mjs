@@ -32,13 +32,14 @@ const pairOfFiles = (sourceFiles, distDir) => {
 
 const pairsOfDirectories = ({ sourceDirs, distDir }) => {
   const parent = sourceDirs[0].split("/")[1];
+
   return sourceDirs.map((sourceDir) => {
     const { dir } = parse(sourceDir);
     // if dir is '.', it's the root directory
     if (dir === '.') {
       return { source: sourceDir, dist: distDir };
     } else {
-      const dist = `./${path.join(`${distDir}`, sourceDir.replace(`./${parent}`, ""))}`;
+      const dist = `./${path.join(`${distDir}`, sourceDir.replace(`${parent}`, ""))}`;
       return { source: sourceDir, dist };
     }
   });
