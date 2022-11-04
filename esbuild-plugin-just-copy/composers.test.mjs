@@ -6,9 +6,9 @@ import {
 } from "./composers.mjs";
 
 test("sourceDirectories", () => {
-  const directories = ["assets", "assets/javascript", "assets/no-file"];
+  const directories = ["./assets", "./assets/javascript", "./assets/no-file"];
 
-  expect(sourceDirectories("assets/**/*")).toEqual(directories);
+  expect(sourceDirectories("./assets/**/*")).toEqual(directories);
 });
 
 // sourceDirs must be relative paths
