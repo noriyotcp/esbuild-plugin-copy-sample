@@ -56,17 +56,21 @@ export const justCopy = (options) => {
             errors.push({ text: err.message });
           }
           return { errors: errors };
-        } else { // copy file
+        } else { // copy a single file
           if (!isFile(from)) {
             errors.push({ text: `${from} is not a file` });
             return {
               errors,
             };
           } else {
-            // mkdir recursive: true
-
-            // copy a single file
+            try {
+              mkdirSync(dirname(to), { recursive: true });
+              fs.copyFileSync(from, to);
+            } catch (error) {
+              errors.push({ text: error.message });
+            }
           }
+          return { errors: errors };
         }
       });
 
