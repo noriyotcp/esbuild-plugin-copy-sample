@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
 import {
   isGlob,
   sourceDirectories,
@@ -7,6 +7,7 @@ import {
   sourceFiles,
   pairOfFiles,
 } from "./composers.mjs";
+import glob from "glob";
 
 export const justCopy = (options) => {
   const errors = [];
@@ -18,6 +19,27 @@ export const justCopy = (options) => {
   return {
     name: "just-copy",
     setup(build) {
+      const esbuildOptions = build.initialOptions;
+      glob(join(to, "**/*"), (err, files) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(files);
+        }
+      })
+
+      if (!esbuildOptions.outdir) {
+        console.log(
+          "[esbuild cleanup] Not outdir configured - skipping the cleanup"
+        );
+        return;
+      }
+      if (!esbuildOptions.metafile) {
+        console.log(
+          "[esbuild cleanup] Metafile is not enabled - skipping the cleanup"
+        );
+        return;
+      }
       build.onLoad({ filter: /.*/ }, async (args) => {
         if (/\/$/.test(from)) {
           errors.push({ text: "`from` must not end with `/`" });

@@ -15,6 +15,7 @@ const options = {
   sourcemap: true,
   bundle: true,
   // watch: true,
+  metafile: true,
   plugins: [
     // copy({
     //   resolveFrom: "cwd",
